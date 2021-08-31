@@ -17,15 +17,15 @@ import seaborn as sns
 import json
 import matplotlib.pyplot as plt
 
-get_ipython().run_line_magic('matplotlib', 'inline')
-get_ipython().run_line_magic('config', "inlinebackend.figure_format = 'retina'")
+#get_ipython().run_line_magic('matplotlib', 'inline')
+#get_ipython().run_line_magic('config', "inlinebackend.figure_format = 'retina'")
 from workspace_utils import active_session
 torch.cuda.is_available()
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Training")
+    parser = argparse.ArgumentParser(description="Program Training")
     parser.add_argument('--data_dir', action='store')
-    parser.add_argument('--arch', dest='arch', default='densenet121', choices=['vgg13', 'densenet121'])
+    parser.add_argument('--arch', dest='arch', default='vgg16')
     parser.add_argument('--learning_rate', dest='learning_rate', default='0.001')
     parser.add_argument('--hidden_units', dest='hidden_units', default='512')
     parser.add_argument('--epochs', dest='epochs', default='3')
