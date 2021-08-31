@@ -100,6 +100,8 @@ def main():
     
     for param in model.parameters():
         param.requires_grad = False
+        
+    model.classfier = Classfier(input_size,output_size,hidden_layers,drop_out)
     
 class Classfier(nn.Module):
     
@@ -126,7 +128,7 @@ input_size= 25088
 output_size= 102
 drop_out = 0.2
 
-model.classfier = Classfier(input_size,output_size,hidden_layers,drop_out)
+
 
 
 
