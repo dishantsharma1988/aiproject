@@ -107,7 +107,7 @@ class Classfier(nn.Module):
         super().__init__()
         self.hidden_layers= nn.ModuleList([nn.Linear(input_size,hidden_layers[0])])
         hlayers = zip(hidden_layers[:-1],hidden_layers[1:])
-        self.hidden_layers.extends([nn.Linear(hinput,houtput) for hinput,houtput in hlayers])
+        self.hidden_layers.extend([nn.Linear(hinput,houtput) for hinput,houtput in hlayers])
         self.output = nn.Linear(hidden_layers[-1],output_size)
         self.dropout = nn.Dropout(p=drop_out)
         
