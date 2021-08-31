@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('checkpoint', action='store', default='checkpoint.pth')
+    parser.add_argument('--checkpoint', action='store', default='checkpoint.pth')
     parser.add_argument('--filepath', dest='filepath', default='flowers/test/1/image_06764.jpg')
     parser.add_argument('--top_k', dest='top_k', default='4')
     parser.add_argument('--category_names', dest='category_names', default='cat_to_name.json')
@@ -53,6 +53,18 @@ def process_image(image):
     image = image.transpose(2, 0, 1)
     return torch.tensor(image)
 
+
+def rebuildModel(filepath):
+    checkpoint = torch.load(filepath)
+    model = getattr(models, checkpoint['name'])(pretrained=True)
+    model.classifier = checkpoint['classifier']
+    model.load_state_dict(checkpoint['state_dict'])
+    model.class_to_idx = checkpoint['class_to_idx']
+    return model
+
+rebuildModel('checkpoint.pth')
+print(model)
+
 def predict(image_path, model, topk=5):
     model.eval()
     model.cpu()
@@ -67,11 +79,13 @@ def predict(image_path, model, topk=5):
     for label in top_labs.numpy()[0]:
         labs.append(index_for_class[label])
     return top_probs, top_class_labs
+#rebuildModel('checkpoint.pth')
+
 
 def main(): 
     args = parse_args()
     gpu = args.gpu
-    model = load_checkpoint(args.checkpoint)
+    model = rebuildModel(args.checkpoint)
     cat_to_name = load_cat_names(args.category_names)
     image_path = args.filepath
     probs, classes = predict(iamge_path, model, int(args.top_k), gpu)
