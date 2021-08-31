@@ -99,7 +99,7 @@ def main():
     model.name= 'vgg16'
     
     for param in model.parameters():
-    param.requires_grad = False
+        param.requires_grad = False
     
 class Classfier(nn.Module):
     
