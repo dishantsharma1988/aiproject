@@ -74,7 +74,7 @@ def main():
     args = parse_args()
     data_dir = 'flowers'
     train_dir = data_dir + '/train'
-    val_dir = data_dir + '/valid'
+    valid_dir = data_dir + '/valid'
     test_dir = data_dir + '/test'
     
     training_transforms = transforms.Compose([transforms.RandomResizedCrop(224),transforms.RandomHorizontalFlip(),transforms.RandomRotation(45),transforms.RandomVerticalFlip(),transforms.ToTensor(),transforms.Normalize([0.485, 0.456, 0.406],[0.229, 0.224, 0.225])])
@@ -85,7 +85,7 @@ def main():
     
     train_data = datasets.ImageFolder(train_dir,transform=training_transforms)
     valid_data = datasets.ImageFolder(valid_dir,transform=validation_transforms)
-    test_data = datasets.ImageFolder(test_dir,transform=testing_tranforms)
+    test_data = datasets.ImageFolder(test_dir,transform=testing_transforms)
     image_datasets = {"training": train_data,"validation": valid_data,"testing": test_data}
 
                                                                 
@@ -97,11 +97,37 @@ def main():
     
     model = models.vgg16(pretrained=True)
     model.name= 'vgg16'
+    hidden_layers= [4096,1024]
+    input_size= 25088
+    output_size= 102
+    drop_out = 0.2
+    
+    
     
     for param in model.parameters():
         param.requires_grad = False
         
     model.classfier = Classfier(input_size,output_size,hidden_layers,drop_out)
+    
+    model.classfier = Classfier(input_size,output_size,hidden_layers,drop_out)
+
+    
+    criterion = nn.NLLLoss()
+    optimizer = optim.Adam(model.classifier.parameters(),lr=0.001)
+    model.to(current_device)
+    optimizer=optim.Adam(model.classifier,parameters(),lr=learning_rate)
+
+    with active_session():
+        train_loss,valid_loss,valid_accuracy= trainClassfier(model,epochs_number,criterion,optimizer,training_loader,validation_loader,current_device)
+    
+    print("Finalized result \n",
+      f"Training loss: {train_loss:.3f}.. \n",
+      f"Testing loss: {valid_loss:.3f}.. \n",
+      f"Testing accuracy: {valid_accuracy:.3f}")
+
+    filename=saveCheckpoint(model)
+
+    
     
 class Classfier(nn.Module):
     
@@ -143,25 +169,5 @@ def saveCheckPoint(model):
     torch.save(checkpoint,'checkpoint.pth')
     
     
-model.classfier = Classfier(input_size,output_size,hidden_layers,drop_out)
-criterion = nn.NLLLoss()
-optimizer = optim.Adam(model.classifier.parameters(),lr=0.001)
-model.to(current_device)
-hidden_layers= [4096,1024]
-input_size= 25088
-output_size= 102
-drop_out = 0.2
-optimizer=optim.Adam(model.classifier,parameters(),lr=learning_rate)
-
-with active_session():
-    train_loss,valid_loss,valid_accuracy= trainClassfier(model,epochs_number,criterion,optimizer,training_loader,validation_loader,current_device)
-    
-print("Finalized result \n",
-      f"Training loss: {train_loss:.3f}.. \n",
-      f"Testing loss: {valid_loss:.3f}.. \n",
-      f"Testing accuracy: {valid_accuracy:.3f}")
-
-filename=saveCheckpoint(model)
-
 if __name__ == "__main__":
     main()
