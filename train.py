@@ -76,7 +76,7 @@ def main():
     train_dir = data_dir + '/train'
     valid_dir = data_dir + '/valid'
     test_dir = data_dir + '/test'
-    
+    current_device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     training_transforms = transforms.Compose([transforms.RandomResizedCrop(224),transforms.RandomHorizontalFlip(),transforms.RandomRotation(45),transforms.RandomVerticalFlip(),transforms.ToTensor(),transforms.Normalize([0.485, 0.456, 0.406],[0.229, 0.224, 0.225])])
     validation_transforms = transforms.Compose([transforms.Resize(255),transforms.CenterCrop(224),transforms.ToTensor(),transforms.Normalize([0.485, 0.456, 0.406],[0.229, 0.224, 0.225])])
     testing_transforms = transforms.Compose([transforms.CenterCrop(224),transforms.Resize(255),transforms.ToTensor(),transforms.Normalize([0.485, 0.456, 0.406],[0.229, 0.224, 0.225])])
@@ -107,9 +107,9 @@ def main():
     for param in model.parameters():
         param.requires_grad = False
         
-    model.classfier = Classfier(input_size,output_size,hidden_layers,drop_out)
+    model.classifier = Classfier(input_size,output_size,hidden_layers,drop_out)
     
-    model.classfier = Classfier(input_size,output_size,hidden_layers,drop_out)
+    #model.classfier = Classfier(input_size,output_size,hidden_layers,drop_out)
 
     
     criterion = nn.NLLLoss()
