@@ -59,7 +59,7 @@ def train(model,epochs_number,criterion,optimizer,training_loader,validation_loa
         if steps % print_ev==0:
             model.eval()
             with torch.no_grad():
-                test_loss,accuracy=testClassfier(model,criterion,validation_loader,current_device)
+                test_loss,accuracy=testClassifier(model,criterion,validation_loader,current_device)
                 
             train_loss=running_loss/print_ev
             valid_loss=test_loss/len(validation_loader)
@@ -69,6 +69,23 @@ def train(model,epochs_number,criterion,optimizer,training_loader,validation_loa
             model.train()
             
     return train_loss,valid_loss   
+
+
+def testClassifier(model, criterion, validation_loader, current_device):
+    model.to(current_device)
+    accuracy = 0
+    test_loss = 0
+    for inputs, labels in validation_loader:
+        inputs, labels = inputs.to(current_device), labels.to(current_device)
+        log_ps = model.forward(inputs)
+        batch_loss = criterion(log_ps, labels)
+        test_loss += batch_loss.item()
+        ps = torch.exp(log_ps)
+        top_p, top_class = ps.topk(1, dim=1)
+        equals = top_class == labels.view(*top_class.shape)
+        accuracy += torch.mean(equals.type(torch.FloatTensor)).item()
+   
+    return test_loss, accuracy
 
 def main():
     args = parse_args()
