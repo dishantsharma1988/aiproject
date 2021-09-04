@@ -69,7 +69,7 @@ def train(model,epochs_number,criterion,optimizer,training_loader,validation_loa
             running_loss=0
             model.train()
             
-    return train_loss,valid_loss   
+    return train_loss,valid_loss,valid_accuracy
 
 
 def testClassifier(model, criterion, validation_loader, current_device):
@@ -146,7 +146,7 @@ def main():
       f"Testing loss: {valid_loss:.3f}.. \n",
       f"Testing accuracy: {valid_accuracy:.3f}")
 
-    filename=saveCheckpoint(model)
+    filename=saveCheckPoint(model)
 
     
     
@@ -180,7 +180,6 @@ drop_out = 0.2
 
 
 def saveCheckPoint(model):
-    model.class_to_idx=train_data.class_to_idx
     checkpoint = {'input_size':1024,
                   'output_size':102,
                   'name': model.name,
@@ -188,6 +187,9 @@ def saveCheckPoint(model):
                   'classfier': model.classfier,
                   'state_dict': model.state_dict()}
     print("inside savecheckpoint")
+    #model.class_to_idx=train_data.class_to_idx
+    
+    
     torch.save(checkpoint,'checkpoint.pth')
     
     
