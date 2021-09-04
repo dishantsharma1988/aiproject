@@ -23,8 +23,9 @@ from workspace_utils import active_session
 torch.cuda.is_available()
 
 def parse_args():
+    print("arguments being parsed")
     parser = argparse.ArgumentParser(description="Program Training")
-    parser.add_argument('--data_dir', action='store')
+    parser.add_argument('--data_dir', action='store', default='./flowers/')
     parser.add_argument('--arch', dest='arch', default='vgg16')
     parser.add_argument('--learning_rate', dest='learning_rate', default='0.001')
     parser.add_argument('--hidden_units', dest='hidden_units', default='512')
@@ -39,13 +40,13 @@ def train(model,epochs_number,criterion,optimizer,training_loader,validation_loa
     print_ev=1
     running_loss= 0 
     steps= 0
-    
+    print("inside train")
     for epoch in range(epochs):
         model.train()
         
         for inputs,labels in training_loader:
             steps=steps+1
-            
+            print(steps)
             inputs,labels=inputs.to(current_device),labels.to(current_device)
             optimizer.zero_grad()
             
@@ -75,6 +76,7 @@ def testClassifier(model, criterion, validation_loader, current_device):
     model.to(current_device)
     accuracy = 0
     test_loss = 0
+    print("inside testClassifier")
     for inputs, labels in validation_loader:
         inputs, labels = inputs.to(current_device), labels.to(current_device)
         log_ps = model.forward(inputs)
@@ -185,6 +187,7 @@ def saveCheckPoint(model):
                   'class_to_idx': model.class_to_idx,
                   'classfier': model.classfier,
                   'state_dict': model.state_dict()}
+    print("inside savecheckpoint")
     torch.save(checkpoint,'checkpoint.pth')
     
     
