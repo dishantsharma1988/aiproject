@@ -129,7 +129,8 @@ def main():
         param.requires_grad = False
         
     model.classifier = Classfier(input_size,output_size,hidden_layers,drop_out)
-    model.class_to_idx = training_loader.dataset.class_to_idx
+    model.class_to_idx = train_data.class_to_idx
+    #model.class_to_idx = training_loader.dataset.class_to_idx
     #model.classfier = Classfier(input_size,output_size,hidden_layers,drop_out)
 
     
