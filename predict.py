@@ -88,7 +88,8 @@ def main():
     model = rebuildModel(args.checkpoint)
     cat_to_name = load_cat_names(args.category_names)
     image_path = args.filepath
-    probs, classes = predict(iamge_path, model, int(args.top_k), gpu)
+    probs, classes = predict(image_path, model, int(args.top_k), gpu)
+    
     labels = [cat_to_name[str(index)] for index in classes]
     probability = probs
     print('File  for selection is: ' + image_path)
@@ -97,7 +98,7 @@ def main():
     n=0 
     while n < len(labels):
         print("{} with a probability of {}".format(labels[n], probability[n]))
-        n += 1 # cycle through
+        n += 1
 
 if __name__ == "__main__":
     main()
