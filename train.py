@@ -188,7 +188,7 @@ def saveCheckPoint(model):
                   'classifier': model.classifier,
                   'state_dict': model.state_dict()}
     print("inside savecheckpoint")
-    model.class_to_idx=train_data.class_to_idx
+    #model.class_to_idx=train_data.class_to_idx
     
     
     torch.save(checkpoint,'checkpoint.pth')
