@@ -128,10 +128,10 @@ def main():
     for param in model.parameters():
         param.requires_grad = False
         
-    model.classifier = Classfier(input_size,output_size,hidden_layers,drop_out)
+    model.classifier = Classifier(input_size,output_size,hidden_layers,drop_out)
     model.class_to_idx = train_data.class_to_idx
     #model.class_to_idx = training_loader.dataset.class_to_idx
-    #model.classfier = Classfier(input_size,output_size,hidden_layers,drop_out)
+    #model.classifier = Classifier(input_size,output_size,hidden_layers,drop_out)
 
     
     criterion = nn.NLLLoss()
@@ -151,7 +151,7 @@ def main():
 
     
     
-class Classfier(nn.Module):
+class Classifier(nn.Module):
     
     def __init__(self,input_size,output_size,hidden_layers,drop_out=0.2):
         super().__init__()
@@ -185,7 +185,7 @@ def saveCheckPoint(model):
                   'output_size':102,
                   'name': model.name,
                   'class_to_idx': model.class_to_idx,
-                  'classfier': model.classfier,
+                  'classifier': model.classifier,
                   'state_dict': model.state_dict()}
     print("inside savecheckpoint")
     model.class_to_idx=train_data.class_to_idx
