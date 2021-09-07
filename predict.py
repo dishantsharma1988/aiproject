@@ -1,5 +1,6 @@
 import torch
 from torch import nn
+from train import Classifier
 from torch import optim
 from torch.autograd import variable
 from torchvision import datasets,transforms,models
@@ -60,12 +61,18 @@ def rebuildModel(filepath):
     model.classifier = checkpoint['classifier']
     model.load_state_dict(checkpoint['state_dict'])
     model.class_to_idx = checkpoint['class_to_idx']
+    print(model)
     return model
-
+    
 rebuildModel('checkpoint.pth')
-print(model)
 
-def predict(image_path, model, topk=5):
+
+def load_cat_names(filename):
+    with open(filename) as f:
+        category_names = json.load(f)
+    return category_names
+
+def predict(image_path, model, topk=5, gpu='gpu'):
     model.eval()
     model.cpu()
     image = Image.open(image_path)
