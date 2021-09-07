@@ -6,6 +6,7 @@ from torch.autograd import variable
 from torchvision import datasets,transforms,models
 from torchvision.datasets import ImageFolder
 import argparse
+import PIL
 import torch.nn.functional as F
 from PIL import Image
 from collections import OrderedDict
@@ -32,7 +33,9 @@ def process_image(image):
     '''
     
     # TODO: Process a PIL image for use in a PyTorch model
+    image = PIL.Image.open(image)
     
+    image.width, image.height = image.size
     if image.width> image.height:
         image.thumbnail((10000000,256))
     else:
@@ -79,7 +82,9 @@ def predict(image_path, model, topk=5, gpu='gpu'):
     image= np.array(image)
     image=torch.from_numpy(image)
     #image = torch.from_numpy(image).type(torch.FloatTensor) 
-    image=process_image(image_path)
+    image = Image.open(image_path)
+    image = process_image(image)
+    #image=process_image(image_path)
     image = image.unsqueeze(0)
     probs = torch.exp(model.forward(image))
     top_probs, top_labs = probs.topk(topk)
