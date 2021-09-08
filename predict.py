@@ -35,15 +35,15 @@ def process_image(image):
     # TODO: Process a PIL image for use in a PyTorch model
     image = PIL.Image.open(image)
     
-    image.width, image.height = image.size
-    if image.width> image.height:
+    width, height = image.size
+    if width> height:
         image.thumbnail((10000000,256))
     else:
         image.thumbnail((256,10000000))
         
         
-    l=(image.width-224)/2
-    b=(image.height-224)/2
+    l=(width-224)/2
+    b=(height-224)/2
     r=(l+224)/2
     t=(b+224)/2
     
@@ -80,7 +80,7 @@ def predict(image_path, model, topk=5, gpu='gpu'):
     model.cpu()
     image = Image.open(image_path)
     image= np.array(image)
-    image=torch.from_numpy(image)
+    image=torch.from_numpy(image).type(torch.DoubleTensor)
     #image = torch.from_numpy(image).type(torch.FloatTensor) 
     image = Image.open(image_path)
     image = process_image(image_path)
