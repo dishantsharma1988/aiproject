@@ -86,7 +86,7 @@ def predict(image_path, model, topk=5, gpu='gpu'):
     #image = Image.open(image_path)
     #image = process_image(image_path)
     #image = process_image(image)
-    #image=process_image(image_path)
+    image=process_image(image_path)
     image = image.unsqueeze(0)
     probs = torch.exp(model.forward(image))
     top_probs, top_labs = probs.topk(topk)
