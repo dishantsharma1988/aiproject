@@ -44,8 +44,8 @@ def process_image(image):
         
     l=(width-224)/2
     b=(height-224)/2
-    r=(l+224)/2
-    t=(b+224)/2
+    r=(l+224)
+    t=(b+224)
     
     image=image.crop((l,b,r,t))
     
@@ -88,13 +88,18 @@ def predict(image_path, model, topk=5, gpu='gpu'):
     #image = process_image(image)
     image=process_image(image_path)
     image = image.unsqueeze(0)
+    print(image.shape)
     probs = torch.exp(model.forward(image))
     top_probs, top_labs = probs.topk(topk)
+    top_labs = top_labs.detach().numpy().tolist()[0]
     top_probs = top_probs.detach().numpy().tolist()[0]
-    index_for_class = {model.class_to_idx[k]: key for key in model.class_to_idx}
-    top_class_labs = []
-    for label in top_labs.numpy()[0]:
-        labs.append(index_for_class[label])
+    #index_for_class = {model.class_to_idx[k]: key for key in model.class_to_idx}
+    index_for_class = {val: key for key, val in model.class_to_idx.items()}
+    
+    #top_class_labs = []
+   # for label in top_labs.numpy()[0]:
+    #    top_class_labs.append(index_for_class[label])
+    top_class_labs = [index_for_class[labs] for labs in top_labs]
     return top_probs, top_class_labs
 #rebuildModel('checkpoint.pth')
 
