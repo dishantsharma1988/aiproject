@@ -78,16 +78,25 @@ def load_cat_names(filename):
 def predict(image_path, model, topk=5, gpu='gpu'):
     model.eval()
     #model.cpu()
-    model = model.double()
+    #model = model.double()
+    
     image = Image.open(image_path)
     image= np.array(image)
+    image=torch.from_numpy(image).type(torch.FloatTensor)
     #image=torch.from_numpy(image).type(torch.DoubleTensor)
+    #if gpu=='gpu' and torch.cuda.is_available():
+     #   model.to('cuda:0')
+      #  image=torch.from_numpy(image).type(torch.cuda.FloatTensor)
+    #else:
+     #   model.cpu()
+      #  image=torch.from_numpy(image).type(torch.DoubleTensor)
     if gpu=='gpu' and torch.cuda.is_available():
         model.to('cuda:0')
-        image=torch.from_numpy(image).type(torch.cuda.FloatTensor)
+        image = image.to('cuda:0')
     else:
         model.cpu()
-        image=torch.from_numpy(image).type(torch.DoubleTensor)
+        image = image.to('cpu')
+    
     #image = torch.from_numpy(image).type(torch.FloatTensor) 
     #image = Image.open(image_path)
     #image = process_image(image_path)
