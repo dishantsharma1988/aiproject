@@ -27,9 +27,9 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Program Training")
     parser.add_argument('--data_dir', action='store', default='./flowers/')
     parser.add_argument('--arch', dest='arch', default='vgg16')
-    parser.add_argument('--learning_rate', dest='learning_rate', default='0.001')
-    parser.add_argument('--hidden_units', dest='hidden_units',default='512')
-    parser.add_argument('--epochs', dest='epochs',default='3')
+    parser.add_argument('--learning_rate', dest='learning_rate',type=float, default='0.001')
+    parser.add_argument('--hidden_units', dest='hidden_units',type=float, default='512')
+    parser.add_argument('--epochs', dest='epochs',type=float,default='3')
     parser.add_argument('--gpu', action='store', default='gpu')
     parser.add_argument('--save_dir', dest="save_dir", action="store", default="checkpoint.pth")
     return parser.parse_args()
@@ -89,7 +89,8 @@ def testClassifier(model, criterion, validation_loader, current_device):
 
 def main():
     args = parse_args()
-    data_dir = 'flowers'
+    #data_dir = 'flowers'
+    data_dir = args.data_dir
     train_dir = data_dir + '/train'
     valid_dir = data_dir + '/valid'
     test_dir = data_dir + '/test'
@@ -202,8 +203,8 @@ class Classifier(nn.Module):
         return x
     
     
-hidden_layers= [4096,1024]
-input_size= 25088
+#hidden_layers= [4096,1024]
+#input_size= 25088
 output_size= 102
 drop_out = 0.2
 
@@ -221,8 +222,8 @@ def saveCheckPoint(model):
     print("inside savecheckpoint")
     #model.class_to_idx=train_data.class_to_idx
     
-    
-    torch.save(checkpoint,'checkpoint.pth')
+    save_dir = args.save_dir
+    torch.save(checkpoint,save_dir)
     
     
 if __name__ == "__main__":
