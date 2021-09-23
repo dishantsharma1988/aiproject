@@ -83,6 +83,7 @@ def predict(image_path, model, topk=5, gpu='gpu'):
     
     #image = Image.open(image_path)
     image=process_image(image_path)
+    image = torch.tensor(image)
     image = image.unsqueeze(0)
     image= np.array(image)
     image=torch.from_numpy(image).type(torch.FloatTensor)
