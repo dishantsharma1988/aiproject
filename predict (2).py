@@ -55,7 +55,8 @@ def process_image(image):
     std=np.array([0.229, 0.224, 0.225])
     image = ((image - mean) / std)
     image = image.transpose(2, 0, 1)
-    return torch.tensor(image)
+    #return torch.tensor(image)
+    return image
 
 
 def rebuildModel(filepath):
