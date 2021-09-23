@@ -77,6 +77,7 @@ def load_cat_names(filename):
     return category_names
 
 def predict(image_path, model, topk=5, gpu='gpu'):
+    
     model.eval()
     #model.cpu()
     #model = model.double()
@@ -84,15 +85,13 @@ def predict(image_path, model, topk=5, gpu='gpu'):
     #image = Image.open(image_path)
     image=process_image(image_path)
     image = torch.tensor(image)
-    image=torch.from_numpy(image).type(torch.FloatTensor)
-    image = image.unsqueeze(0)
-    #image=torch.from_numpy(image).type(torch.DoubleTensor)
-    #if gpu=='gpu' and torch.cuda.is_available():
-     #   model.to('cuda:0')
-      #  image=torch.from_numpy(image).type(torch.cuda.FloatTensor)
-    #else:
-     #   model.cpu()
-      #  image=torch.from_numpy(image).type(torch.DoubleTensor)
+    if device == 'cuda':
+        im = torch.from_numpy (image).type (torch.cuda.FloatTensor)
+    else:
+        image = torch.from_numpy (image).type (torch.FloatTensor)
+ 
+    image = image.unsqueeze (dim = 0)
+  
     if gpu=='gpu' and torch.cuda.is_available():
         model.to('cuda:0')
         image = image.to('cuda:0')
@@ -100,12 +99,6 @@ def predict(image_path, model, topk=5, gpu='gpu'):
         model.cpu()
         image = image.to('cpu')
     
-    #image = torch.from_numpy(image).type(torch.FloatTensor) 
-    #image = Image.open(image_path)
-    #image = process_image(image_path)
-    #image = process_image(image)
-    #image=process_image(image_path)
-    #image = image.unsqueeze(0)
     print(image.shape)
     probs = torch.exp(model.forward(image))
     top_probs, top_labs = probs.topk(topk)
@@ -119,8 +112,7 @@ def predict(image_path, model, topk=5, gpu='gpu'):
     #    top_class_labs.append(index_for_class[label])
     top_class_labs = [index_for_class[labs] for labs in top_labs]
     return top_probs, top_class_labs
-#rebuildModel('checkpoint.pth')
-
+    
 
 def main(): 
     args = parse_args()
