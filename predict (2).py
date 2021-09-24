@@ -77,7 +77,6 @@ def load_cat_names(filename):
     return category_names
 
 def predict(image_path, model, topk=5, gpu='gpu'):
-    
     model.eval()
     #model.cpu()
     #model = model.double()
@@ -85,7 +84,7 @@ def predict(image_path, model, topk=5, gpu='gpu'):
     #image = Image.open(image_path)
     image=process_image(image_path)
     image = torch.tensor(image)
-    if device == 'cuda':
+    if gpu=='gpu' and torch.cuda.is_available():
         im = torch.from_numpy (image).type (torch.cuda.FloatTensor)
     else:
         image = torch.from_numpy (image).type (torch.FloatTensor)
