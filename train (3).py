@@ -28,7 +28,7 @@ def parse_args():
     parser.add_argument('--data_dir', action='store', default='./flowers/')
     parser.add_argument('--arch', dest='arch', default='vgg16')
     parser.add_argument('--learning_rate', dest='learning_rate',type=float, default='0.001')
-    parser.add_argument('--hidden_units', dest='hidden_units',type=float, default='512')
+    parser.add_argument('--hidden_units', dest='hidden_units',nargs='+',type=list, default='512')
     parser.add_argument('--epochs', dest='epochs',type=float,default='3')
     parser.add_argument('--gpu', action='store', default='gpu')
     parser.add_argument('--save_dir', dest="save_dir", action="store", default="checkpoint.pth")
@@ -187,11 +187,13 @@ class Classifier(nn.Module):
     def __init__(self,input_size,output_size,hidden_layers,drop_out=0.2):
         super().__init__()
         #self.hidden_layers= nn.ModuleList([nn.Linear(input_size,hidden_layers[0])])
-        self.hidden_layers= nn.ModuleList([nn.Linear(int(input_size),int(hidden_layers))])
+        #self.hidden_layers= nn.ModuleList([nn.Linear(int(input_size),int(hidden_layers))])
+        self.hidden_layers= nn.ModuleList([nn.Linear(int(input_size),int(hidden_layers[0]))])
+        hlayers=zip(hidden_layers[:-1],hidden_layers[1:])
        
        # replaced self.hidden_layers= nn.ModuleList([nn.Linear(int(input_size),int(hidden_layers[0]))])
-        hlayers = zip(int(hidden_layers),int(hidden_layers))
-        
+        #hlayers = zip(int(hidden_layers),int(hidden_layers))
+        zip(itertools.repeat(int(hidden_layers),int(hidden_layers)))
         #hlayers = zip(int(hidden_layers[:-1]),int(hidden_layers[1:]))
         self.hidden_layers.extend([nn.Linear(int(hinput),int(houtput)) for hinput,houtput in hlayers])
         self.output = nn.Linear(hidden_layers[-1],output_size)
