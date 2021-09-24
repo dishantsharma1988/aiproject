@@ -1,6 +1,7 @@
 import torch
 from torch import nn
 from torch import optim
+import itertools
 from torch.autograd import variable
 from torchvision import datasets,transforms,models
 from torchvision.datasets import ImageFolder
