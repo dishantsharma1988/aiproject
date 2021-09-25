@@ -194,8 +194,8 @@ class Classifier(nn.Module):
        
        # replaced self.hidden_layers= nn.ModuleList([nn.Linear(int(input_size),int(hidden_layers[0]))])
         #hlayers = zip(int(hidden_layers),int(hidden_layers))
-        zip(itertools.repeat((hidden_layers),(hidden_layers)))
-        #hlayers = zip(int(hidden_layers[:-1]),int(hidden_layers[1:]))
+        #zip(itertools.repeat((hidden_layers),(hidden_layers)))
+        hlayers = list(zip(hidden_layers[:-1],hidden_layers[1:])
         self.hidden_layers.extend([nn.Linear(int(hinput),int(houtput)) for hinput,houtput in hlayers])
         self.output = nn.Linear(hidden_layers[-1],output_size)
         self.dropout = nn.Dropout(p=drop_out)
