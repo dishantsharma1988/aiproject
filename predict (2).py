@@ -1,5 +1,6 @@
 import torch
 from torch import nn
+from torch import Tensor
 from train import Classifier
 from torch import optim
 from torch.autograd import variable
@@ -85,7 +86,7 @@ def predict(image_path, model, topk=5, gpu='gpu'):
     image=process_image(image_path)
     #image = torch.tensor(image)
     if gpu=='gpu' and torch.cuda.is_available():
-        im = torch.from_numpy (image).type (torch.cuda.FloatTensor)
+        image = torch.from_numpy (image).type (torch.cuda.FloatTensor)
     else:
         image = torch.from_numpy (image).type (torch.FloatTensor)
  
@@ -101,6 +102,7 @@ def predict(image_path, model, topk=5, gpu='gpu'):
     print(image.shape)
     probs = torch.exp(model.forward(image))
     top_probs, top_labs = probs.topk(topk)
+    Tensor.cpu()
     top_labs = top_labs.detach().numpy().tolist()[0]
     top_probs = top_probs.detach().numpy().tolist()[0]
     #index_for_class = {model.class_to_idx[k]: key for key in model.class_to_idx}
