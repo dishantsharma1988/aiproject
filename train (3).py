@@ -200,7 +200,8 @@ class Classifier(nn.Module):
         #zip(itertools.repeat((hidden_layers),(hidden_layers)))
         #hlayers = list(zip(hidden_layers[:-1],hidden_layers[1:])
         self.hidden_layers.extend([nn.Linear(int(hinput),int(houtput)) for hinput,houtput in hlayers])
-        self.output = nn.Linear(hidden_layers[-1],output_size)
+        #self.output = nn.Linear(hidden_layers[-1],output_size)
+        self.output = nn.Linear(int(hidden_layers[-1]),output_size)
         self.dropout = nn.Dropout(p=drop_out)
         
     def forward(self,x):
