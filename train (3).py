@@ -47,7 +47,7 @@ def train(model,epochs_number,criterion,optimizer,training_loader,validation_loa
         
         for inputs,labels in training_loader:
             steps=steps+1
-            print(steps)
+            #print(steps)
             inputs,labels=inputs.to(current_device),labels.to(current_device)
             optimizer.zero_grad()
             
@@ -190,12 +190,15 @@ class Classifier(nn.Module):
         #self.hidden_layers= nn.ModuleList([nn.Linear(input_size,hidden_layers[0])])
         #self.hidden_layers= nn.ModuleList([nn.Linear(int(input_size),int(hidden_layers))])
         self.hidden_layers= nn.ModuleList([nn.Linear(int(input_size),int(hidden_layers[0]))])
+        print("hidden layers passed")
+        print(hidden_layers)
         hlayers=zip(hidden_layers[:-1],hidden_layers[1:])
-       
+        print("hlayers passed")
+        print(hidden_layers[-1])
        # replaced self.hidden_layers= nn.ModuleList([nn.Linear(int(input_size),int(hidden_layers[0]))])
         #hlayers = zip(int(hidden_layers),int(hidden_layers))
         #zip(itertools.repeat((hidden_layers),(hidden_layers)))
-        hlayers = list(zip(hidden_layers[:-1],hidden_layers[1:])
+        #hlayers = list(zip(hidden_layers[:-1],hidden_layers[1:])
         self.hidden_layers.extend([nn.Linear(int(hinput),int(houtput)) for hinput,houtput in hlayers])
         self.output = nn.Linear(hidden_layers[-1],output_size)
         self.dropout = nn.Dropout(p=drop_out)
